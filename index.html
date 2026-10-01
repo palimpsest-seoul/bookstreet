@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정성옥 책거리 — BOOK STREET</title>
+<meta name="description" content="정성옥 개인전 책거리_BOOK STREET. INSA1010, Seoul.">
+<meta property="og:title" content="정성옥 책거리 — BOOK STREET">
+<meta property="og:description" content="정성옥 개인전 책거리_BOOK STREET. INSA1010, Seoul.">
+<meta property="og:image" content="bookstreet.jpg">
+<meta property="og:type" content="website">
+<style>
+  /* 한 점의 패널을 어두운 전시벽에 띄우고, 탭하면 가로 폭에 맞춰 읽는 구조 */
+  :root {
+    --ground: #13222C;
+    --ground-deep: #0C171E;
+    --paper: #F1EEE7;
+    --edge: rgba(241, 238, 231, 0.10);
+    --hint: rgba(241, 238, 231, 0.70);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+               "Noto Sans KR", "Segoe UI", system-ui, sans-serif;
+    color-scheme: dark;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: radial-gradient(120% 80% at 50% 22%, var(--ground) 0%, var(--ground-deep) 100%);
+    background-attachment: fixed;
+    font-family: var(--font-ui);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .stage {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .panel {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 2px;
+    box-shadow: 0 1px 0 var(--edge), 0 22px 60px rgba(0, 0, 0, 0.5);
+    cursor: zoom-in;
+    transition: box-shadow 0.3s ease;
+  }
+
+  body.read .stage {
+    height: auto;
+    display: block;
+    padding: 0;
+  }
+
+  body.read .panel {
+    width: 100%;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: zoom-out;
+  }
+
+  .hint {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    margin: 0 0 14px;
+    padding: 7px 14px calc(7px + env(safe-area-inset-bottom, 0px));
+    border-radius: 999px;
+    background: rgba(12, 23, 30, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--edge);
+    color: var(--hint);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .hint.gone { opacity: 0; }
+
+  .panel:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .hint { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <img class="panel" id="panel" src="bookstreet.jpg"
+       alt="정성옥 책거리 BOOK STREET — 개인전, 특별전, 작품 소장 이력이 적힌 전시 안내판"
+       width="2363" height="5126" tabindex="0">
+</div>
+
+<p class="hint" id="hint">탭하면 크게 보기</p>
+
+<script>
+  (function () {
+    var panel = document.getElementById('panel');
+    var hint = document.getElementById('hint');
+    var timer;
+
+    function showHint(text) {
+      hint.textContent = text;
+      hint.classList.remove('gone');
+      clearTimeout(timer);
+      timer = setTimeout(function () { hint.classList.add('gone'); }, 2600);
+    }
+
+    function toggle() {
+      var reading = document.body.classList.toggle('read');
+      if (reading) {
+        window.scrollTo(0, 0);
+        showHint('다시 탭하면 전체 보기');
+      } else {
+        showHint('탭하면 크게 보기');
+      }
+    }
+
+    panel.addEventListener('click', toggle);
+    panel.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+
+    timer = setTimeout(function () { hint.classList.add('gone'); }, 3200);
+  })();
+</script>
+
+</body>
+</html>
